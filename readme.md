@@ -10,7 +10,7 @@ Official [dlist.top](https://dlist.top) gateway client for Go.
 
 ## Setup
 
-To get your token please refer to [Gateway Docs](https://dlist.top) (todo)
+To get your token please refer to [Gateway Docs](https://github.com/dlist-top/docs/wiki/Gateway)
 
 ## Example code
 
