@@ -1,12 +1,18 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/dlist-top/client-go.svg)](https://pkg.go.dev/github.com/dlist-top/client-go)
 
-Official dlist.top gateway client written in go.
+# DList.top Go client
 
-To add to the project, run:
+Official [dlist.top](https://dlist.top) gateway client for Go.
+
+## Installation
 
 `go get github.com/dlist-top/client-go`
 
-Example code
+## Setup
+
+To get your token please refer to [Gateway Docs](https://dlist.top) (todo)
+
+## Example code
 
 ```go
 package main
@@ -33,4 +39,4 @@ func main() {
 
 ```
 
-You can have up to 2 connections (per token) at the same time.
+Notice: You can have up to 2 connections (per token) at the same time.
