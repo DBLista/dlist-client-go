@@ -30,7 +30,7 @@ type Client struct {
 	onRateHandler RateHandler
 }
 
-// Connect creates a connection to the dlist.top gateway.
+// Connect initializes the connection to the dlist.top gateway.
 func (c *Client) Connect(ctx context.Context) (err error) {
 	c.err = make(chan error)
 	c.conn = make(chan bool)
@@ -113,12 +113,12 @@ func (c *Client) OnVote(handler VoteHandler) {
 	c.onVoteHandler = handler
 }
 
-// OnRate will be executed if someone adds review about the entity assigned to this token.
+// OnRate will be executed if someone rates the entity assigned to this token.
 func (c *Client) OnRate(handler RateHandler) {
 	c.onRateHandler = handler
 }
 
-// NewClientWithLogger works the same as NewClient, BUT additionally sets the logger with the specified level.
+// NewClientWithLogger works the same as NewClient, but additionally takes in logger level.
 func NewClientWithLogger(token string, level zerolog.Level) *Client {
 	logger := log.Level(level)
 	c := NewClient(token)
@@ -126,7 +126,7 @@ func NewClientWithLogger(token string, level zerolog.Level) *Client {
 	return c
 }
 
-// NewClient returns a new instance of Client type.
+// NewClient creates a new client for entity associated with given token.
 func NewClient(token string) *Client {
 	c := new(Client)
 	c.token = token
