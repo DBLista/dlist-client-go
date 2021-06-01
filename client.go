@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"time"
 
 	"github.com/BOOMfinity-Developers/wshelper"
 	"github.com/rs/zerolog"
@@ -59,6 +60,11 @@ func (c *Client) onError(_ *wshelper.Connection, err error) {
 
 func (c *Client) onClose(_ *wshelper.Connection, code websocket.StatusCode, reason string) {
 	c.logger.Warn().Int("code", int(code)).Str("reason", reason).Msg("connection has been closed")
+	c.logger.Debug().Msg("Reconnect in 15 seconds...")
+	time.Sleep(15 * time.Second)
+	if err := c.Connect(context.Background()); err != nil {
+		c.logger.WithLevel(zerolog.ErrorLevel).Err(err).Send()
+	}
 }
 
 func (c *Client) onMessage(conn *wshelper.Connection, _ websocket.MessageType, data wshelper.Payload) {
