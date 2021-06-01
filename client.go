@@ -33,8 +33,8 @@ type Client struct {
 
 // Connect initializes the connection to the dlist.top gateway.
 func (c *Client) Connect(ctx context.Context) (err error) {
-	c.err = make(chan error)
-	c.conn = make(chan bool)
+	c.err = make(chan error, 1)
+	c.conn = make(chan bool, 1)
 	c.ws, err = wshelper.Dial(ctx, GatewayURL, &websocket.DialOptions{})
 	if err != nil {
 		return
