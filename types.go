@@ -56,6 +56,7 @@ type VoteData struct {
 	Date       Timestamp  `json:"date"`
 	// Total votes of entity NOT only this user
 	TotalVotes uint64 `json:"totalVotes"`
+	UserVotes uint64 `json:"userVotes"` 
 }
 
 type Timestamp struct {
