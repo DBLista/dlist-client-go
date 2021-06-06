@@ -26,6 +26,7 @@ type Client struct {
 	logger zerolog.Logger
 	err    chan error
 	conn   chan bool
+	entity *Entity
 
 	onVoteHandler VoteHandler
 	onRateHandler RateHandler
@@ -58,12 +59,16 @@ func (c *Client) onError(_ *wshelper.Connection, err error) {
 	c.logger.Error().Err(err).Send()
 }
 
+func (c *Client) Entity() *Entity {
+	return c.entity
+}
+
 func (c *Client) onClose(_ *wshelper.Connection, code websocket.StatusCode, reason string) {
 	c.logger.Warn().Int("code", int(code)).Str("reason", reason).Msg("connection has been closed")
 	c.logger.Debug().Msg("Reconnect in 15 seconds...")
 	time.Sleep(15 * time.Second)
 	if err := c.Connect(context.Background()); err != nil {
-		c.logger.WithLevel(zerolog.ErrorLevel).Err(err).Send()
+		c.logger.Error().Err(err).Send()
 	}
 }
 
@@ -71,7 +76,7 @@ func (c *Client) onMessage(conn *wshelper.Connection, _ websocket.MessageType, d
 	var payload gatewayPayload
 	err := data.Into(&payload)
 	if err != nil {
-		c.logger.WithLevel(zerolog.ErrorLevel).Err(err).Msg("error unmarshalling gateway op")
+		c.logger.Error().Err(err).Msg("error unmarshalling gateway op")
 		return
 	}
 	c.logger.Debug().Str("OP", payload.Op.String()).Msg(string(payload.Data))
@@ -83,10 +88,15 @@ func (c *Client) onMessage(conn *wshelper.Connection, _ websocket.MessageType, d
 				Token: c.token,
 			},
 		}); err != nil {
-			c.logger.WithLevel(zerolog.ErrorLevel).Err(err).Send()
+			c.logger.Error().Err(err).Send()
 			return
 		}
 	case ReadyOP:
+		if err := json.Unmarshal(payload.Data, &c.entity); err != nil {
+			c.logger.Error().Err(err).Send()
+			return
+		}
+		c.logger.Info().Str("name", c.entity.Name).Str("id", c.entity.ID).Str("type", string(c.entity.Type)).Send()
 		c.conn <- true
 	case EventOP:
 		switch payload.Event {

@@ -49,6 +49,12 @@ const (
 	ServerType EntityType = "servers"
 )
 
+type Entity struct {
+	Type EntityType `json:"type"`
+	ID   string     `json:"id"`
+	Name string     `json:"name"`
+}
+
 type VoteData struct {
 	UserID     string     `json:"authorID"`
 	EntityType EntityType `json:"entityType"`
@@ -56,7 +62,7 @@ type VoteData struct {
 	Date       Timestamp  `json:"date"`
 	// Total votes of entity NOT only this user
 	TotalVotes uint64 `json:"totalVotes"`
-	UserVotes uint64 `json:"userVotes"` 
+	UserVotes  uint64 `json:"userVotes"`
 }
 
 type Timestamp struct {
